@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
 
@@ -23,7 +24,7 @@ struct Flight {
 // Represents Airport Node
 struct Node {
     Airport airport_info;
-    vector<Flight> flights;
+    unordered_map<string, Flight> flights;
 };
 
 // Main
