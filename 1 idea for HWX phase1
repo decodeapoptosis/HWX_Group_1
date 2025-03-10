@@ -1,0 +1,117 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <fstream>
+#include <sstream>
+
+using namespace std;
+
+// Forward Declaration
+struct Node;
+
+// Airport Details
+struct Airport {
+    string code;
+    string location;
+    string phone;
+};
+
+// Represents a link with the value of the link and a vector of nodes or node point to the Airports.
+struct Flight {
+    int value;
+    Node* destination = nullptr;
+};
+
+// Represents Airport Node
+struct Node {
+    Airport airport_info;
+    unordered_map<string, Flight> flights;
+};
+
+
+
+// Function to load airport data from a file
+void loadAirports (const string & filename, unordered_map <string, Node> & airports) {
+    
+    ifstream file(filename);
+    string line;
+
+    while (getline(file, line)) {
+        
+        stringstream ss(line);
+        string code, location, phone;
+
+        ss >> code >> location >> phone;
+
+        Airport airport = {code, location, phone};
+        Node node = {airport};
+
+        airports[code] = node;
+    }
+}
+
+// Function to load flight data from a file
+void loadFlights (const string & filename, unordered_map <string, Node> & airports) {
+    
+    ifstream file(filename);
+    string line;
+
+    while (getline(file, line)) {
+        
+        stringstream ss(line);
+        string sourceCode, destinationCode;
+        int value;
+
+        ss >> sourceCode >> value >> destinationCode;
+
+        // Ensure the airports exist
+        if (airports.find(sourceCode) != airports.end() && airports.find(destinationCode) != airports.end()) {
+            
+            Flight flight = {value, &airports[destinationCode]};
+            airports[sourceCode].flights[destinationCode] = flight;
+        }
+    }
+}
+
+// Function to display directly connected airports
+void displayConnectedAirports (const string & airportCode, const unordered_map <string, Node> & airports) {
+    auto it = airports.find(airportCode);
+    if (it != airports.end()) {
+        cout << "The directly connected airports: ";
+        for (const auto& flightPair : it->second.flights) {
+            cout << flightPair.first << " ";
+        }
+        cout << endl;
+    } else {
+        cout << "Airport code not found!" << endl;
+    }
+}
+
+// Main
+int main() {
+    
+    unordered_map<string, Node> airports;
+
+    // Load data from files
+    loadAirports("airports.txt", airports);
+    loadFlights("flights.txt", airports);
+
+    string input;
+
+    cout << "Enter 'Stop' to end the query." << endl;
+    cout << "Enter an airport symbol, and the airports directly connected to it will be displayed." << endl;
+
+    while (true) {
+        cout << "Enter: ";
+        getline(cin, input);
+
+        if (input == "Stop") {
+            break;
+        }
+
+        displayConnectedAirports(input, airports);
+    }
+
+    return 0;
+}
