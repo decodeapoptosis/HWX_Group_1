@@ -1,0 +1,9 @@
+LGA New_York       (718)533-3400
+SFO San_Francisco  (650)821-8211
+LAX Los_Angeles    (855)463-5252
+ORD Chicago        (800)832-6352
+YVR Vancouver      (604)207-7077
+HND Tokyo          (813)5757-8111
+ANC Anchorage      (907)266-2526
+YOW Ottawa         (613)248-2125
+ICN Seoul          (82)1577-2600
